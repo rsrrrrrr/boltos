@@ -19,6 +19,11 @@ import query from '../../common/Query';
 
 
 const products = [];
+const defaultValues = {
+	core_mhz : 1582,
+	memory_mhz : 1350,
+	power_limit : 200
+}
 
 class Dashboard extends Component {
 	constructor(props, context) {
@@ -263,9 +268,22 @@ class Dashboard extends Component {
 			}
 		})
 			.then(res => {
-				console.log('res dashboard =>', res.data)
+				console.log('res dashboard =>', res.data);
+				var tempArray = [];
 				if (res.status == 200) {
-					this.setState({ data: res.data.data })
+					// this.setState({ data: res.data.data });
+					res.data.data.map(item => {
+						var exist = false;
+						tempArray.map(temp => {
+							if(temp.mserver_id == item.mserver_id) {
+								exist = true;
+							}
+						});
+						if(!exist) {
+							tempArray.push(item);
+						}
+					});
+					this.setState({ data: tempArray });
 				}
 				else {
 					this.props.history.push('/');
@@ -436,7 +454,7 @@ class Dashboard extends Component {
 								</Col>
 								<Col md={3} sm={6}>
 									<ControlLabel>Target Temperature ℃</ControlLabel>
-									<FormControl type="number" placeholder="text" defaultValue="---" inputRef={(ref) => this.targetTemp = ref} />
+									<FormControl type="number" placeholder="" defaultValue="---" inputRef={(ref) => this.targetTemp = ref} />
 								</Col>
 							</Row>
 							<Row className="row-modal">
@@ -499,14 +517,14 @@ class Dashboard extends Component {
 											</thead>
 											<tbody>
 												<tr>
-													<td className="modal-td"><FormControl className="table-input" type="text" value="1582" /></td>
-													<td className="modal-td"><FormControl className="table-input" type="text" value="1350" /></td>
-													<td className="modal-td"><FormControl className="table-input" type="text" value="200" /></td>
+													<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={defaultValues.core_mhz} /></td>
+													<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={defaultValues.memory_mhz} /></td>
+													<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={defaultValues.power_limit}/></td>
 												</tr>
 												<tr>
-													<td className="modal-td"><FormControl className="table-input" type="text" value="1582" /></td>
-													<td className="modal-td"><FormControl className="table-input" type="text" value="1350" /></td>
-													<td className="modal-td"><FormControl className="table-input" type="text" value="200" /></td>
+													<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={defaultValues.core_mhz} /></td>
+													<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={defaultValues.memory_mhz} /></td>
+													<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={defaultValues.power_limit} /></td>
 												</tr>
 											</tbody>
 										</Table>
