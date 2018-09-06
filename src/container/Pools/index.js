@@ -4,6 +4,8 @@ import Loader from 'react-loader'
 import {
 	Button,
 	Table,
+	ControlLabel,
+	FormControl,
 	Row,
 	Col
 } from 'react-bootstrap'
@@ -16,6 +18,7 @@ class Pools extends Component {
 		this.state = {
 			data: []
 		};
+
 	}
 
 	componentWillMount() {
@@ -32,13 +35,28 @@ class Pools extends Component {
 		})
 			.then(res => {
 				if (res.status == 200) {
-					this.setState({ data: res.data.data })
+					
+					res.data.data.map(item => {
+						item.isEdit = false;
+					});
+					this.setState({ data: res.data.data });
+
 				} else {
 					this.props.history.push('/');
 				}
 				// console.log('res mining-profile =>', res.data)
 				// this.addProducts(res.data.data.length, res.data.data)
 			})
+	}
+
+	editPool = (index) => {
+		this.state.data[index].isEdit = true;
+		this.setState({data: this.state.data});
+	}
+
+	cancelEditPool = (index) => {
+		this.state.data[index].isEdit = false;
+		this.setState({data: this.state.data});
 	}
 
 	render() {
@@ -86,13 +104,33 @@ class Pools extends Component {
 							{
 								data.map((item, i) =>
 									<tr key={i}>
-										<td>{item.accountName}</td>
-										<td><img className="bitcoin-img" src="/assets/img/bitcoin.png" alt="" />{item.currency}</td>
-										<td>{item.stratumUrl}</td>
-										<td>{item.username}</td>
-										<td>{item.password}</td>
+										<td>
+										 	{ !item.isEdit ? item.accountName : null}
+										 	{ item.isEdit ?  <FormControl type="text" defaultValue={item.accountName}/>: null}
+										</td>
+										<td>
+											{ !item.isEdit ? <img className="bitcoin-img" src="/assets/img/bitcoin.png" alt="" /> : null}
+											{ !item.isEdit ? item.currency : null}
+											{ item.isEdit ? <FormControl type="text" defaultValue={item.currency}/> : null}
+										</td>
+										<td>
+											{ !item.isEdit ? item.stratumUrl : null}
+											{ item.isEdit ? <FormControl type="text" defaultValue={item.stratumUrl}/> : null}
+										</td>
+										<td>
+											{ !item.isEdit ? item.username : null}
+											{ item.isEdit ? <FormControl type="text" defaultValue={item.username}/>: null}
+										</td>
+										<td>
+											{ !item.isEdit ? item.password : null}
+											{ item.isEdit ? <FormControl type="text" defaultValue={item.password}/>: null}
+										</td>
 										<td className="table-btn">
-											<Button className="black-btn" onClick={() => this.props.history.push('/home/edit')}>Edit</Button>
+											{/* <Button className="black-btn" onClick={() => this.props.history.push('/home/edit')}>Edit</Button> */}
+											{/* <Button className="black-btn" onClick={() => this.editPool(i)}>Edit</Button> */}
+											{ !item.isEdit ? <Button className="black-btn" onClick={() => this.editPool(i)}>Edit</Button> : null}
+											{ item.isEdit ? <Button className="green-btn">Save</Button>: null}
+											{ item.isEdit ? <Button className="gray-btn" onClick={() => this.cancelEditPool(i)}>Cancel</Button>: null}
 											<Button className="red-btn">Delete</Button>
 										</td>
 									</tr>
