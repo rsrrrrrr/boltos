@@ -126,7 +126,7 @@ class Pools extends Component {
 											{ item.isEdit ? <FormControl type="text" defaultValue={item.password}/>: null}
 										</td>
 										<td className="table-btn">
-											{/* <Button className="black-btn" onClick={() => this.props.history.push('/home/edit')}>Edit</Button> */}
+											<Button className="black-btn" onClick={() => this.props.history.push('/home/edit')}>Edit</Button>
 											{/* <Button className="black-btn" onClick={() => this.editPool(i)}>Edit</Button> */}
 											{ !item.isEdit ? <Button className="black-btn" onClick={() => this.editPool(i)}>Edit</Button> : null}
 											{ item.isEdit ? <Button className="green-btn">Save</Button>: null}

@@ -65,7 +65,7 @@ getData = () => {
 			else {
 				this.props.history.push('/');
 			}
-			// console.log('res mining-profile =>', res.data)
+			console.log('res mining-profile =>', res.data)
 			// this.addProducts(res.data.data.length, res.data.data)
 		})
 }
@@ -93,6 +93,7 @@ getData = () => {
 								<th>Profile Type</th>
 								<th>Mining Pool(s)</th>
 								<th>Switching Interval</th>
+								<th>Actions</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -115,6 +116,10 @@ getData = () => {
 								<td>{item.type}</td>
 								<td>{item.profile}</td>
 								<td>{item.switchingIntervals}</td>
+								<td>
+									<Button className="black-btn">Edit</Button>
+									<Button className="red-btn">Delete</Button>
+								</td>
 							</tr>
 							
 							)
@@ -148,6 +153,7 @@ getData = () => {
 							 */}
 						</tbody>
 					</Table>
+					<Button className="green-btn">Add Profile</Button>
 					<div className="pagination-box">
 						<Button className="btn-pagination">Showing 1 to 3 of 3 entries</Button>
 						<nav className="page-box" aria-label="Page navigation example">
