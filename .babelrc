@@ -1,0 +1,28 @@
+{
+    "presets": [
+        "env",
+        "react",
+        "stage-3"
+    ],
+    "plugins": [
+        "transform-runtime",
+        "transform-decorators-legacy",
+        "transform-class-properties", ["module-resolver", {
+            "root": ["./src"],
+            "alias": {
+                "styles": "./src/styles",
+                "assets": "./src/assets"
+            }
+        }]
+    ],
+
+    "env": {
+        "test": {
+            "plugins": [
+                "transform-runtime",
+                "transform-decorators-legacy",
+                "transform-class-properties"
+            ]
+        }
+    }
+}

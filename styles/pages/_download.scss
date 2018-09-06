@@ -1,0 +1,108 @@
+.download{
+    .second{
+        &-txt{
+            font-size: 36px;
+            color: $dark-gray;
+            padding-bottom: 20px;
+        }
+        &-box{
+            text-align: center;
+            padding: 20px 40px;
+        }
+        &-title{
+            font-size: 20px;
+            color: $dark-gray;
+            padding: 0 40px;
+            margin-bottom: 30px;
+        }
+    }
+    &-box{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        background-color: $light-gray;
+        padding: 20px;
+        border: 1px solid $border-color;
+        text-align: left;
+        .second-title{
+            padding: 0 ;
+            margin-bottom: 0;
+        }
+    }
+    .first-box{
+        
+        border-bottom: solid $border-color;
+        .h4{
+            color: $black;
+            text-align: left;
+            font-size: 20px;
+            padding: 0 0 14px;
+        }
+        .green-text{
+            padding: 0 4px;
+            color: $green;
+            display: inline-block;
+        }
+    }
+    .green-text{
+        color: $green;
+    }
+    .left-box{
+        width: 80%;
+        padding: 10px;
+        @media screen and (max-width:767px) {
+            width: 100%;
+        }
+    }
+    .right-box{
+        width: 20%;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: flex-start;
+        border-left: 1px solid $border-color;
+        @media screen and (max-width:767px) {
+            border-left: 0;
+            width: 100%;
+        }
+        p{
+            color: $black;
+            font-size: 18px;
+        }
+    }
+    .ul-box{
+        padding: 20px;
+        li{
+            margin-bottom: 5px;
+        }
+        img{
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            display: inline-block;
+        }
+        p{
+            color: $dark-gray;
+            display: inline-block;
+            font-size: 20px;
+        }
+
+    }
+    .last-box{
+        border-top: 1px solid $border-color;
+        margin-top: 30px;
+        padding: 20px;
+        p{
+            color: $dark-gray;
+            font-size: 20px
+        }
+        b{
+            color: $green;
+        }
+    }
+    .flash-img{
+        width: 150px;
+        
+    }
+}
