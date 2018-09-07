@@ -1,0 +1,13 @@
+.pools-dragging{
+    li {
+        padding: 10px 15px;
+        background:#eee;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        &:hover {
+          background: darken(#eee, 5%);
+        }
+    }
+}

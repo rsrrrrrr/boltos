@@ -271,7 +271,7 @@ class Dashboard extends Component {
 			}
 		})
 			.then(res => {
-				// console.log('res dashboard =>', res.data);
+				console.log('res dashboard =>', res.data);
 				var tempArray = [];
 				if (res.status == 200) {
 					// this.setState({ data: res.data.data });
