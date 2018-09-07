@@ -70,9 +70,6 @@ getData = () => {
 		})
 }
 
-
-
-
 	render() {
 		// const { profile } = this.state
 
@@ -112,12 +109,16 @@ getData = () => {
 							{
 							data.map((item, i) =>
 									<tr key={i}>
-								<td>{item.pools}</td>
-								<td>{item.type}</td>
 								<td>{item.profile}</td>
+								<td>
+									{item.type == 1 ? 'SinglePool': null}
+									{item.type == 2 ? 'MultiPool': null}
+									{item.type == 3 ? 'Profitability Pool': null}
+								</td>
+								<td>{item.pools}</td>
 								<td>{item.switchingIntervals}</td>
 								<td>
-									<Button className="black-btn">Edit</Button>
+									<Button className="black-btn" onClick={() => this.props.history.push('/home/edit/' + item.mc_id)}>Edit</Button>
 									<Button className="red-btn">Delete</Button>
 								</td>
 							</tr>
@@ -155,15 +156,13 @@ getData = () => {
 					</Table>
 					<Button className="green-btn">Add Profile</Button>
 					<div className="pagination-box">
-						<Button className="btn-pagination">Showing 1 to 3 of 3 entries</Button>
+						<Button className="btn-pagination">Showing 2 to 2 of 2 entries</Button>
 						<nav className="page-box" aria-label="Page navigation example">
 							<ul className="pagination justify-content-end">
 								<li className="page-item disabled">
 									<a className="page-link" href="#">Previous</a>
 								</li>
 								<li className="page-item"><a className="page-link" href="#">1</a></li>
-								<li className="page-item"><a className="page-link" href="#">2</a></li>
-								<li className="page-item"><a className="page-link" href="#">3</a></li>
 								<li className="page-item disabled">
 									<a className="page-link" href="#">Next</a>
 								</li>

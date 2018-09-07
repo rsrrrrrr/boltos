@@ -64,7 +64,7 @@ function App() {
 						<Route path="/home/dashboard" render={props => <Dashboard {...props} />} />
 						<Route path="/home/pools" render={props => <Pools {...props} />} />
 						<Route path="/home/miningprofile" render={props => <MiningProfile {...props} />} />
-						<Route path="/home/edit" render={props => <Edit {...props} />} />
+						<Route path="/home/edit/:miningprifile_id" render={props => <Edit {...props} />} />
 						<Route path="/home/profile" render={props => <Profile {...props} />} />
 					</Home>
 				)} />

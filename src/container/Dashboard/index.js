@@ -233,6 +233,9 @@ class Dashboard extends Component {
 
 
 	getServer = (id) => {
+		this.setState({server: {
+			gpus: []
+		}});
 		this.miningData()
 		this.setState({ lgShow: true })
 		var token = localStorage.getItem('token')
@@ -247,7 +250,7 @@ class Dashboard extends Component {
 		axios.post('https://dev.boltos.io:3000/api/v1/users/server-info', reqData, { headers: headers })
 			.then(res => {
 				// console.log('iddd', id)
-				// console.log('res server =>', res)
+				console.log('res server =>', res.data.data)
 				this.setState({ server: res.data.data })
 				if (res.status == 200) {
 				}
@@ -268,7 +271,7 @@ class Dashboard extends Component {
 			}
 		})
 			.then(res => {
-				console.log('res dashboard =>', res.data);
+				// console.log('res dashboard =>', res.data);
 				var tempArray = [];
 				if (res.status == 200) {
 					// this.setState({ data: res.data.data });
@@ -454,7 +457,7 @@ class Dashboard extends Component {
 								</Col>
 								<Col md={3} sm={6}>
 									<ControlLabel>Target Temperature ℃</ControlLabel>
-									<FormControl type="number" placeholder="" defaultValue="---" inputRef={(ref) => this.targetTemp = ref} />
+									<FormControl type="number" placeholder="" defaultValue={server.target_temp} inputRef={(ref) => this.targetTemp = ref} />
 								</Col>
 							</Row>
 							<Row className="row-modal">
@@ -478,7 +481,7 @@ class Dashboard extends Component {
 								</Col>
 								<Col md={3} sm={6}>
 									<ControlLabel>Minimum Fan Speed %</ControlLabel>
-									<FormControl type="number" defaultValue="---" inputRef={(ref) => this.fanspeed = ref} />
+									<FormControl type="number" defaultValue={server.min_fanspeed} inputRef={(ref) => this.fanspeed = ref} />
 								</Col>
 							</Row>
 							<div className="bottom-box">

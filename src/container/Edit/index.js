@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Loader from 'react-loader'
+import axios from 'axios';
 import {
 	Button,
 	Table,
@@ -15,7 +16,9 @@ class Edit extends Component {
 
 		this.state = {
 			smShow: false,
-			lgShow: false
+			lgShow: false,
+			minigprofile_id: null,
+			data : null
 		};
 	}
 
@@ -23,6 +26,9 @@ class Edit extends Component {
 
 	componentWillMount() {
 		// this.addProducts(100);
+		const minigprofile_id = this.props.match.params.miningprifile_id;
+		this.state.minigprofile_id = minigprofile_id;
+		this.getData();
 	}
 
 	update = () => {
@@ -55,14 +61,22 @@ class Edit extends Component {
 getData = () => {
 	var token = localStorage.getItem('token')
 	// console.log('token dashboard', token)
-	axios.get('https://dev.boltos.io:3000/api/v1/users/mining-profiles', {
+	axios.get('https://dev.boltos.io:3000/api/v1/users/mining-profiles/', {
 		headers: {
 			'Authorization': 'Bearer ' + token,
 		}
 	})
 		.then(res => {
 			if (res.status == 200) {
-				this.setState({ data: res.data.data })
+				// this.setState({ data: res.data.data })
+				res.data.data.map(item => {
+					// console.log(item);
+					if(item.mc_id == this.state.minigprofile_id) {
+						this.setState({data : item});
+					}
+				});
+
+				console.log(this.state);
 			} 
 			else {
 				this.props.history.push('/home/dashboard');
@@ -81,7 +95,7 @@ getData = () => {
 				<div className="edit">
 					<FormGroup>
 						<ControlLabel>Profile Name</ControlLabel>
-						<FormControl type="text" placeholder="text"  inputRef={(ref) => this.profileName = ref} />
+						<FormControl type="text" placeholder="text"   inputRef={(ref) => this.profileName = ref} />
 					</FormGroup>
 
 					<FormGroup controlId="formControlsSelect" className="filter-select">
@@ -131,12 +145,15 @@ getData = () => {
 						</nav>
 					</div>
 					<FormGroup controlId="formControlsSelect" className="filter-select">
-						<ControlLabel>Select</ControlLabel>
+						<ControlLabel>Switching Interval</ControlLabel>
 						<FormControl componentClass="select" placeholder="select">
-							<option value="select">select</option>
-							<option value="other">Mining</option>
-							<option value="other">option ||</option>
-							<option value="other">option |||</option>
+							<option value="1">1 Hour</option>
+							<option value="2">2 Hours</option>
+							<option value="4">4 Hours</option>
+							<option value="6">6 Hours</option>
+							<option value="12">12 Hours</option>
+							<option value="24">24 Hours</option>
+							<option value="48">48 Hours</option>
 						</FormControl>
 					</FormGroup>
 					<div className="btn-bottom">
