@@ -19,6 +19,11 @@ class Pools extends Component {
 			data: []
 		};
 
+		this.accountName = [];
+		this.currency = [];
+		this.stratumUrl = [];
+		this.username = [];
+		this.password = [];
 	}
 
 	componentWillMount() {
@@ -28,7 +33,8 @@ class Pools extends Component {
 	getData = () => {
 		var token = localStorage.getItem('token')
 		// console.log('token dashboard', token)
-		axios.get('https://dev.boltos.io:3000/api/v1/users/mining-pools', {
+		// axios.get('https://dev.boltos.io:3000/api/v1/users/mining-pools', {
+		axios.get('http://localhost:3000/api/v1/users/mining-pools', {
 			headers: {
 				'Authorization': 'Bearer ' + token,
 			}
@@ -44,9 +50,60 @@ class Pools extends Component {
 				} else {
 					this.props.history.push('/');
 				}
-				// console.log('res mining-profile =>', res.data)
+				console.log('res mining-profile =>', res.data)
 				// this.addProducts(res.data.data.length, res.data.data)
 			})
+	}
+
+	save = (index) => {
+		// this.getData();
+		const reqData = {
+			mpool_id : this.state.data[index].mpool_id,
+			accountName : this.accountName[index].value,
+			currency : this.currency[index].value,
+			stratumUrl : this.stratumUrl[index].value,
+			username : this.username[index].value,
+			password : this.password[index].value
+		};
+
+		var token = localStorage.getItem('token')
+
+		axios.post('http://localhost:3000/api/v1/users/mining-pool',reqData, {
+			headers: {
+				'Authorization': 'Bearer ' + token,
+			}
+		}).then(res => {
+			if (res.status == 200) {
+				this.getData();
+			} else {
+				this.props.history.push('/');
+			}
+		});
+	}
+
+	delete = (index) => {
+		var token = localStorage.getItem('token');
+		const reqData = {
+			mpool_id : this.state.data[index].mpool_id,
+		};
+
+		var r = confirm("Do you want to delete this pool?");
+		if(!r) {
+			return;
+		}
+		
+		axios.post('http://localhost:3000/api/v1/users/delete-mining-pool',reqData, {
+			headers: {
+				'Authorization': 'Bearer ' + token,
+			}
+		}).then(res => {
+			if (res.status == 200) {
+				this.getData();
+			} else {
+				this.props.history.push('/');
+			}
+		});
+
 	}
 
 	editPool = (index) => {
@@ -106,31 +163,31 @@ class Pools extends Component {
 									<tr key={i}>
 										<td>
 										 	{ !item.isEdit ? item.accountName : null}
-										 	{ item.isEdit ?  <FormControl type="text" defaultValue={item.accountName}/>: null}
+										 	{ item.isEdit ?  <FormControl type="text" defaultValue={item.accountName} inputRef={(ref) => this.accountName[i] = ref} />: null}
 										</td>
 										<td>
 											{ !item.isEdit ? <img className="bitcoin-img" src="/assets/img/bitcoin.png" alt="" /> : null}
 											{ !item.isEdit ? item.currency : null}
-											{ item.isEdit ? <FormControl type="text" defaultValue={item.currency}/> : null}
+											{ item.isEdit ? <FormControl type="text" defaultValue={item.currency} inputRef={(ref) => this.currency[i] = ref}/> : null}
 										</td>
 										<td>
 											{ !item.isEdit ? item.stratumUrl : null}
-											{ item.isEdit ? <FormControl type="text" defaultValue={item.stratumUrl}/> : null}
+											{ item.isEdit ? <FormControl type="text" defaultValue={item.stratumUrl} inputRef={(ref) => this.stratumUrl[i] = ref}/> : null}
 										</td>
 										<td>
 											{ !item.isEdit ? item.username : null}
-											{ item.isEdit ? <FormControl type="text" defaultValue={item.username}/>: null}
+											{ item.isEdit ? <FormControl type="text" defaultValue={item.username} inputRef={(ref) => this.username[i] = ref}/>: null}
 										</td>
 										<td>
 											{ !item.isEdit ? item.password : null}
-											{ item.isEdit ? <FormControl type="text" defaultValue={item.password}/>: null}
+											{ item.isEdit ? <FormControl type="text" defaultValue={item.password} inputRef={(ref) => this.password[i] = ref}/> : null}
 										</td>
 										<td className="table-btn">
 											{/* <Button className="black-btn" onClick={() => this.props.history.push('/home/edit')}>Go To Edit</Button> */}
 											{ !item.isEdit ? <Button className="black-btn" onClick={() => this.editPool(i)}>Edit</Button> : null}
-											{ item.isEdit ? <Button className="green-btn">Save</Button>: null}
+											{ item.isEdit ? <Button className="green-btn" onClick={() => this.save(i)}>Save</Button>: null}
 											{ item.isEdit ? <Button className="gray-btn" onClick={() => this.cancelEditPool(i)}>Cancel</Button>: null}
-											<Button className="red-btn">Delete</Button>
+											<Button className="red-btn" onClick={() => this.delete(i)}>Delete</Button>
 										</td>
 									</tr>
 								)

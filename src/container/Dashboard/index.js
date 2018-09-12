@@ -98,7 +98,8 @@ class Dashboard extends Component {
 		const req = {
 			mserver_id: id
 		}
-		axios.post('https://dev.boltos.io:3000/api/v1/users/server-start', req, { headers: headers })
+		// axios.post('https://dev.boltos.io:3000/api/v1/users/server-start', req, { headers: headers })
+		axios.post('http://localhost:3000/api/v1/users/server-start', req, { headers: headers })
 			.then(res => {
 				// console.log('res server =>', res.data)
 				if (res.status == 200) {
@@ -121,7 +122,8 @@ class Dashboard extends Component {
 		const req = {
 			mserver_id: id
 		}
-		axios.post('https://dev.boltos.io:3000/api/v1/users/server-stop', req, { headers: headers })
+		// axios.post('https://dev.boltos.io:3000/api/v1/users/server-stop', req, { headers: headers })
+		axios.post('http://localhost:3000/api/v1/users/server-stop', req, { headers: headers })
 			.then(res => {
 				// console.log('res server =>', res.data)
 				if (res.status == 200) {
@@ -153,7 +155,8 @@ class Dashboard extends Component {
 			min_fanspeed: 2
 		}
 		// console.log(this.select)
-		axios.post('https://dev.boltos.io:3000/api/v1/users/server-update', reqData, { headers: headers })
+		// axios.post('https://dev.boltos.io:3000/api/v1/users/server-update', reqData, { headers: headers })
+		axios.post('http://localhost:3000/api/v1/users/server-update', reqData, { headers: headers })
 			.then(res => {
 				// console.log('res update =>', res)
 				// this.getData();
@@ -176,7 +179,8 @@ class Dashboard extends Component {
 		const reqData = {
 			mserver_id: id
 		}
-		axios.post('https://dev.boltos.io:3000/api/v1/users/server-delete', reqData, { headers: headers })
+		// axios.post('https://dev.boltos.io:3000/api/v1/users/server-delete', reqData, { headers: headers })
+		axios.post('http://localhost:3000/api/v1/users/server-delete', reqData, { headers: headers })
 			.then(res => {
 				// console.log('idddd', id)
 				// console.log('req =>', reqData)
@@ -223,7 +227,8 @@ class Dashboard extends Component {
 		var headers = {
 			'Authorization': 'Bearer ' + token
 		}
-		axios.get('https://dev.boltos.io:3000/api/v1/users/mining-config', { headers: headers })
+		// axios.get('https://dev.boltos.io:3000/api/v1/users/mining-config', { headers: headers })
+		axios.get('http://localhost:3000/api/v1/users/mining-config', { headers: headers })
 			.then(res => {
 				// console.log('iddd', id)
 				// console.log('mining server =>', res)
@@ -247,7 +252,8 @@ class Dashboard extends Component {
 		const reqData = {
 			mserver_id: id
 		}
-		axios.post('https://dev.boltos.io:3000/api/v1/users/server-info', reqData, { headers: headers })
+		// axios.post('https://dev.boltos.io:3000/api/v1/users/server-info', reqData, { headers: headers })
+		axios.post('http://localhost:3000/api/v1/users/server-info', reqData, { headers: headers })
 			.then(res => {
 				// console.log('iddd', id)
 				console.log('res server =>', res.data.data)
@@ -265,7 +271,8 @@ class Dashboard extends Component {
 	getData = () => {
 		var token = localStorage.getItem('token')
 		// console.log('token dashboard', token)
-		axios.get('https://dev.boltos.io:3000/api/v1/users/dashboard', {
+		// axios.get('https://dev.boltos.io:3000/api/v1/users/dashboard', {
+		axios.get('http://localhost:3000/api/v1/users/dashboard', {
 			headers: {
 				'Authorization': 'Bearer ' + token
 			}

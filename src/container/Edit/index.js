@@ -115,29 +115,25 @@ class Edit extends Component {
 // API call 
 getData = () => {
 	var token = localStorage.getItem('token')
-	// console.log('token dashboard', token)
-	axios.get('https://dev.boltos.io:3000/api/v1/users/mining-profiles/', {
+	// axios.get('https://dev.boltos.io:3000/api/v1/users/mining-profiles/', {
+	axios.get('http://localhost:3000/api/v1/users/mining-profiles/', {
 		headers: {
 			'Authorization': 'Bearer ' + token,
 		}
-	})
-		.then(res => {
-			if (res.status == 200) {
-				// this.setState({ data: res.data.data })
-				res.data.data.map(item => {
-					// console.log(item);
-					if(item.mc_id == this.state.minigprofile_id) {
-						this.setState({data : item});
-					}
-				});
+	}).then(res => {
+		if (res.status == 200) {
+			res.data.data.map(item => {
+				// console.log(item);
+				if(item.mc_id == this.state.minigprofile_id) {
+					this.setState({data : item});
+				}
+			});
 
-			} 
-			else {
-				this.props.history.push('/home/dashboard');
-			}
-			// console.log('res mining-profile =>', res.data)
-			// this.addProducts(res.data.data.length, res.data.data)
-		})
+		} 
+		else {
+			this.props.history.push('/home/dashboard');
+		}
+	})
 }
 
 	render() {
