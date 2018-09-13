@@ -17,6 +17,12 @@ class List extends React.Component {
 	  super(props);
 	  this.state = {...props};
 	}
+
+	componentWillReceiveProps (props) {
+		const {colors} = this.props;
+		this.setState({colors: colors});
+	}
+
 	dragStart(e) {
 	  this.dragged = e.currentTarget;
 	  e.dataTransfer.effectAllowed = 'move';
@@ -41,8 +47,15 @@ class List extends React.Component {
 	  this.over = e.target;
 	  e.target.parentNode.insertBefore(placeholder, e.target);
 	}
+
+	deleteItem = (item) => {
+		this.props.onClick(item);
+	}
 	  render() {
+		  console.log('-------')
+	 console.log(this.state.colors);
 	  var listItems = this.state.colors.map((item, i) => {
+		  
 		return (
 		  <li 
 			data-id={i}
@@ -50,16 +63,16 @@ class List extends React.Component {
 			draggable='true'
 			onDragEnd={this.dragEnd.bind(this)}
 			onDragStart={this.dragStart.bind(this)}>
-			{item}
+			{item.accountName}
 			<Button>Drag Up/Down<img className="move-img" src="/assets/img/move.png" alt="" /></Button>
-			<Button className="red-btn">Delete</Button>
+			<Button className="red-btn" onClick={() => this.deleteItem(item)}>Delete</Button>
 			</li>
 		)
 	   });
 		  return (
-			  <ul onDragOver={this.dragOver.bind(this)} className="pools-dragging">
-		  {listItems}
-		</ul>
+			<ul onDragOver={this.dragOver.bind(this)} className="pools-dragging">
+				{listItems}
+			</ul>
 		  )
 	  }
   }
@@ -73,7 +86,8 @@ class Edit extends Component {
 			lgShow: false,
 			minigprofile_id: null,
 			data : [],
-			colors: ['Red', 'Green', 'Blue', 'Yellow', 'Black', 'White', 'Orange']
+			colors: ['Red', 'Green', 'Blue', 'Yellow', 'Black', 'White', 'Orange'],
+			pools : []
 		};
 	}
 
@@ -126,6 +140,29 @@ getData = () => {
 				// console.log(item);
 				if(item.mc_id == this.state.minigprofile_id) {
 					this.setState({data : item});
+					
+					var poolIDs = item.pools.split('] [');
+					// console.log(poolIDs);
+					var pools = [];
+					poolIDs.map(id => {
+						id = id.replace(']', '');
+						id = id.replace('[', '');
+
+						var postData = {
+							mp_id: id
+						};
+						axios.post('http://localhost:3000/api/v1/users/get-mining-pool/', postData,{headers:{'Authorization': 'Bearer ' + token}})
+						.then(res => {
+							if(res.status == 200) {
+								// console.log(res.data.data);
+								pools.push(res.data.data);
+								this.setState({pools: pools});
+								// console.log(this.state);
+								this.setState({pools: pools});
+							}
+						});
+					});
+					
 				}
 			});
 
@@ -136,9 +173,23 @@ getData = () => {
 	})
 }
 
+refreshColorList = () => {
+	this.setState({colors: this.state.pools});
+}
+
+deletePool = (pool) => {
+	this.state.pools.map((item, i) => {
+		if(item.mpool_id == pool.mpool_id) {
+			this.state.pools.splice(i);
+			this.setState({pools : this.state.pools});
+			return;
+		}
+	});
+}
+
 	render() {
-		const {data} = this.state;
-		console.log(data);
+		const {data, pools} = this.state;
+		// console.log(pools);
 		return (
 			<div className="pools">
 				<Loader loaded={true} color="white" />
@@ -183,7 +234,7 @@ getData = () => {
 						</Table> */}
 
 						<div>
-        					<List colors={this.state.colors} />	
+        					<List colors={pools} refresh={this.refreshColorList} onClick={this.deletePool}/>	
 						</div>
 					</div>
 					
