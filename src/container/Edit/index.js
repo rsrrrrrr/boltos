@@ -8,6 +8,7 @@ import {
 	FormGroup,
 	FormControl,
 	ControlLabel,
+	Modal,
 	
 } from 'react-bootstrap'
 var placeholder = document.createElement("li");
@@ -52,8 +53,6 @@ class List extends React.Component {
 		this.props.onClick(item);
 	}
 	  render() {
-		  console.log('-------')
-	 console.log(this.state.colors);
 	  var listItems = this.state.colors.map((item, i) => {
 		  
 		return (
@@ -87,7 +86,9 @@ class Edit extends Component {
 			minigprofile_id: null,
 			data : [],
 			colors: ['Red', 'Green', 'Blue', 'Yellow', 'Black', 'White', 'Orange'],
-			pools : []
+			pools : [],
+			allPools: [],
+			addPoolQueue : []
 		};
 	}
 
@@ -103,25 +104,39 @@ class Edit extends Component {
 	update = () => {
 		var token = localStorage.getItem('token')
 		// console.log('token delete', token)
-		var id = localStorage.getItem('id')
+		// var id = localStorage.getItem('id')
 		var headers = {
 			'Authorization': 'Bearer ' + token
 		}
+		var mc_pools = '';
+		if(this.state.pools.length == 1) {
+			mc_pools = this.state.pools[0].mpool_id;
+		} else if (this.state.pools.length == 0 ){
+			mc_pools = '';
+		} else {
+			this.state.pools.map(pool => {
+				mc_pools += '[' + pool.mpool_id + '] ';
+			})
+		}
+
 		const reqData = {
-			mc_id: 1,
+			mc_id: this.state.data.mc_id,
 			mc_name: this.profileName.value,
 			mc_type: this.profileType.value,
-			mc_pools: this.pools.value,
-			mc_switching: 60
+			mc_pools: mc_pools,
+			mc_switching: this.profileInterval.value
 		}
+
+		// console.log(reqData);
 		// console.log(this.select)
-		axios.post('https://dev.boltos.io:3000/api/v1/users/mining-profiles', reqData, { headers: headers })
+		// axios.post('https://dev.boltos.io:3000/api/v1/users/mining-profiles', reqData, { headers: headers })
+		axios.post('http://localhost:3000/api/v1/users/mining-profiles', reqData, { headers: headers })
 			.then(res => {
 				// console.log('res update =>', res)
 				// this.getData();
 				// console.log('token secoond', token)
-				localStorage.setItem('id', '')
-				this.getData()
+				// localStorage.setItem('id', '')
+				this.getData();
 			})
 		
 	}
@@ -142,7 +157,6 @@ getData = () => {
 					this.setState({data : item});
 					
 					var poolIDs = item.pools.split('] [');
-					// console.log(poolIDs);
 					var pools = [];
 					poolIDs.map(id => {
 						id = id.replace(']', '');
@@ -171,6 +185,19 @@ getData = () => {
 			this.props.history.push('/home/dashboard');
 		}
 	})
+
+	axios.get('http://localhost:3000/api/v1/users/mining-pools', {
+			headers: {
+				'Authorization': 'Bearer ' + token,
+			}
+		})
+		.then(res => {
+			if (res.status == 200) {
+				this.setState({ allPools: res.data.data });
+			} else {
+				this.props.history.push('/home/dashboard');
+			}
+		})
 }
 
 refreshColorList = () => {
@@ -187,9 +214,69 @@ deletePool = (pool) => {
 	});
 }
 
+addPool = () => {
+	this.setState({ lgShow: true });
+	this.state.addPoolQueue = [];
+	this.setState({addPoolQueue : this.state.addPoolQueue});
+	this.state.allPools.map(pool => {
+		var isExist = false;
+		this.state.pools.map(item => {
+			if(item.mpool_id == pool.mpool_id) {
+				isExist = true;
+			}	
+		});
+		if(!isExist) {
+			this.state.addPoolQueue.push(pool);
+			this.setState({addPoolQueue: this.state.addPoolQueue});
+		}
+	});
+}
+
+addSelectedPool = () => {
+	// alert(this.selectedPoolForAdd.value);
+	this.state.allPools.map(pool => {
+		if(pool.mpool_id == this.selectedPoolForAdd.value) {
+			this.state.pools.push(pool);
+			this.setState({pools: this.state.pools});
+			this.setState({lgShow : false});
+		}
+	})
+}
+
+deleteProfile = () => {
+	var r = confirm("Do you want to delete this profile?");
+	if(!r) {
+		return;
+	}
+
+	var token = localStorage.getItem('token');
+	var postData = {
+		mc_id : this.state.data.mc_id
+	};
+	axios.post('http://localhost:3000/api/v1/users/delete-mining-profile',postData, {
+			headers: {
+				'Authorization': 'Bearer ' + token,
+			}
+		})
+		.then(res => {
+			// console.log(res);
+			this.props.history.push('/home/miningprofile');
+			
+		})
+}
+
+selectChange = (event) => {
+	this.state.data.type = event.target.value;
+	this.setState({ data : this.state.data})
+}
+
+selectChangeInterval = (event) => {
+	this.state.data.switchingIntervals = event.target.value;
+	this.setState({ data : this.state.data});
+}
+
 	render() {
-		const {data, pools} = this.state;
-		// console.log(pools);
+		const {data, pools, addPoolQueue} = this.state;
 		return (
 			<div className="pools">
 				<Loader loaded={true} color="white" />
@@ -203,13 +290,16 @@ deletePool = (pool) => {
 
 					<FormGroup controlId="formControlsSelect" className="filter-select">
 						<ControlLabel>Profile Type</ControlLabel>
-						<FormControl componentClass="select" value={data.type} >
+						{
+							console.log(data.type)
+						}
+						<FormControl componentClass="select" defaultValue={data.type} value={data.type}  onChange={this.selectChange} inputRef={(ref) => this.profileType = ref}>
 							<option value="1">SinglePool</option>
 							<option value="2">MultiPool</option>
 							<option value="3">Profitability Pool</option>
 						</FormControl>
 					</FormGroup>
-					<Button className="green-btn">Add Pool</Button>
+					<Button className="green-btn" onClick={()=> this.addPool()}>Add Pool</Button>
 
 					<div className="general-table">
 						<p className="title-page">Pools</p>
@@ -254,7 +344,7 @@ deletePool = (pool) => {
 					</div>
 					<FormGroup controlId="formControlsSelect" className="filter-select">
 						<ControlLabel>Switching Interval</ControlLabel>
-						<FormControl componentClass="select" placeholder="select">
+						<FormControl componentClass="select" placeholder="select" value={data.switchingIntervals} defaultValue={data.switchingIntervals} onChange={this.selectChangeInterval} inputRef={(ref) => this.profileInterval = ref}>
 							<option value="1">1 Hour</option>
 							<option value="2">2 Hours</option>
 							<option value="4">4 Hours</option>
@@ -265,10 +355,40 @@ deletePool = (pool) => {
 						</FormControl>
 					</FormGroup>
 					<div className="btn-bottom">
-						<Button className="green-btn">Update Server Info</Button>
-						<Button className="red-btn">Delete Server</Button>
+						<Button className="green-btn" onClick={() => {this.update()}}>Update Server Info</Button>
+						<Button className="red-btn" onClick={() => {this.deleteProfile()}}>Delete Server</Button>
 					</div>
 				</div>
+
+
+				<Modal
+					show={this.state.lgShow} onHide={() => this.setState({ lgShow: false })}
+					bsSize="large"
+					aria-labelledby="contained-modal-title-lg"
+				>
+					<Modal.Header closeButton>
+						<Modal.Title id="contained-modal-title-lg">Add Pool</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<div className="modal-box">
+						<FormGroup controlId="formControlsSelect" className="filter-select">
+							<ControlLabel>Switching Interval</ControlLabel>
+							<FormControl componentClass="select" placeholder="select" inputRef={(ref) => this.selectedPoolForAdd = ref}>
+								{
+									addPoolQueue.map((item, i) =>
+										<option key={i} value={item.mpool_id}>{item.accountName}</option>
+									)
+								}
+							</FormControl>
+						</FormGroup>
+						</div>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button className="green-btn" onClick={() => {this.addSelectedPool()}}>Add Pool</Button>
+						<Button className="red-btn" onClick={() => {this.setState({lgShow: false})}}>Cancel</Button>
+					</Modal.Footer>
+				</Modal>
+
 			</div>
 		)
 	}

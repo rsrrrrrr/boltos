@@ -32,27 +32,24 @@ class Pools extends Component {
 
 	getData = () => {
 		var token = localStorage.getItem('token')
-		// console.log('token dashboard', token)
 		// axios.get('https://dev.boltos.io:3000/api/v1/users/mining-pools', {
 		axios.get('http://localhost:3000/api/v1/users/mining-pools', {
 			headers: {
 				'Authorization': 'Bearer ' + token,
 			}
 		})
-			.then(res => {
-				if (res.status == 200) {
-					
-					res.data.data.map(item => {
-						item.isEdit = false;
-					});
-					this.setState({ data: res.data.data });
+		.then(res => {
+			if (res.status == 200) {
+				
+				res.data.data.map(item => {
+					item.isEdit = false;
+				});
+				this.setState({ data: res.data.data });
 
-				} else {
-					this.props.history.push('/');
-				}
-				console.log('res mining-profile =>', res.data)
-				// this.addProducts(res.data.data.length, res.data.data)
-			})
+			} else {
+				this.props.history.push('/');
+			}
+		})
 	}
 
 	save = (index) => {

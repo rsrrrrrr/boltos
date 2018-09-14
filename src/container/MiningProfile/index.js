@@ -53,7 +53,8 @@ class MiningProfile extends Component {
 getData = () => {
 	var token = localStorage.getItem('token')
 	// console.log('token dashboard', token)
-	axios.get('https://dev.boltos.io:3000/api/v1/users/mining-profiles', {
+	// axios.get('https://dev.boltos.io:3000/api/v1/users/mining-profiles', {
+	axios.get('http://localhost:3000/api/v1/users/mining-profiles', {
 		headers: {
 			'Authorization': 'Bearer ' + token,
 		}
@@ -67,6 +68,28 @@ getData = () => {
 			}
 			console.log('res mining-profile =>', res.data)
 			// this.addProducts(res.data.data.length, res.data.data)
+		})
+}
+
+deleteProfile = (mc_id) => {
+	var r = confirm("Do you want to delete this profile?");
+	if(!r) {
+		return;
+	}
+
+	var token = localStorage.getItem('token');
+	var postData = {
+		mc_id : mc_id
+	};
+	axios.post('http://localhost:3000/api/v1/users/delete-mining-profile',postData, {
+			headers: {
+				'Authorization': 'Bearer ' + token,
+			}
+		})
+		.then(res => {
+			// console.log(res);
+			// this.props.history.push('/home/miningprofile');
+			this.getData();
 		})
 }
 
@@ -119,7 +142,7 @@ getData = () => {
 								<td>{item.switchingIntervals}</td>
 								<td>
 									<Button className="black-btn" onClick={() => this.props.history.push('/home/edit/' + item.mc_id)}>Edit</Button>
-									<Button className="red-btn">Delete</Button>
+									<Button className="red-btn" onClick={() => {this.deleteProfile(item.mc_id)}}>Delete</Button>
 								</td>
 							</tr>
 							

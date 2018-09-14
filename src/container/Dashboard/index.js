@@ -470,7 +470,7 @@ class Dashboard extends Component {
 							<Row className="row-modal">
 								<Col md={3} sm={6}>
 									<ControlLabel>Mining Profile</ControlLabel>
-									<FormControl onChange={this.selectChange} value={this.state.value} type="text" componentClass="select" placeholder="text" defaultValue={server.miningProfile} inputRef={(ref) => this.miningProfile = ref}>
+									<FormControl onChange={this.selectChange} value={this.state.value} type="select" componentClass="select" placeholder="text" defaultValue={server.miningProfile} inputRef={(ref) => this.miningProfile = ref}>
 										{
 											mining.map((item, i) =>
 												<option key={i} value={item.mc_id}>{item.mc_name}</option>
