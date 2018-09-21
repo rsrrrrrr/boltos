@@ -106,7 +106,8 @@ class Create extends Component {
         else if (this.rpassword.value == this.password.value){
 
             // event.stopPropagation();
-            axios.post('https://dev.boltos.io:3000/api/v1/users/register', {
+            // axios.post('https://dev.boltos.io:3000/api/v1/users/register', {
+            axios.post('http://localhost:3000/api/v1/users/register', {
                 firstname: this.firstname.value,
                 lastname: this.lastname.value,
                 username: this.username.value,

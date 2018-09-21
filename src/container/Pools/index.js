@@ -16,7 +16,8 @@ class Pools extends Component {
 		super(props, context);
 
 		this.state = {
-			data: []
+			data: [],
+			isShowAdd : false
 		};
 
 		this.accountName = [];
@@ -45,7 +46,7 @@ class Pools extends Component {
 					item.isEdit = false;
 				});
 				this.setState({ data: res.data.data });
-
+				
 			} else {
 				this.props.history.push('/');
 			}
@@ -53,7 +54,6 @@ class Pools extends Component {
 	}
 
 	save = (index) => {
-		// this.getData();
 		const reqData = {
 			mpool_id : this.state.data[index].mpool_id,
 			accountName : this.accountName[index].value,
@@ -72,6 +72,33 @@ class Pools extends Component {
 		}).then(res => {
 			if (res.status == 200) {
 				this.getData();
+			} else {
+				this.props.history.push('/');
+			}
+		});
+	}
+
+	add = () => {
+		const reqData = {
+			accountName : this.addAccountName.value,
+			currency : this.addCurrency.value,
+			stratumUrl : this.addStratumUrl.value,
+			username : this.addUsername.value,
+			password : this.addPassword.value
+		};
+
+		var token = localStorage.getItem('token')
+
+		axios.post('http://localhost:3000/api/v1/users/mining-pool-create',reqData, {
+			headers: {
+				'Authorization': 'Bearer ' + token,
+			}
+		}).then(res => {
+			if (res.status == 200) {
+				this.getData();
+				this.setState({
+					isShowAdd : false
+				})
 			} else {
 				this.props.history.push('/');
 			}
@@ -113,35 +140,20 @@ class Pools extends Component {
 		this.setState({data: this.state.data});
 	}
 
+	addServerShow = (show) => {
+		this.setState({
+			isShowAdd: show
+		});
+	}
+
 	render() {
-		const { data } = this.state
+		const { data, isShowAdd } = this.state
 		return (
 			<div className="pools">
 				<Loader loaded={true} color="white" />
 				<p className="title-page">Mining Server Dashboard</p>
 				<p className="gray-box">Mining Pools</p>
-				{/* <div className="chart">
-					<Row>
-						<Col sm={12} md={4}>
-							<div className="chart-box">
-								<p className="title-chart gray-btn">Chart Data</p>
-								<img className="cirecle-chart-img" src="/assets/img/pie-chart.png" alt="" />
-							</div>
-						</Col>
-						<Col sm={12} md={4}>
-							<div className="chart-box">
-								<p className="title-chart lightgray-btn">Chart Data</p>
-								<img className="chart-img" src="/assets/img/chart.png" alt="" />
-							</div>
-						</Col>
-						<Col sm={12} md={4}>
-							<div className="chart-box">
-								<p className="title-chart red-btn">Chart Data</p>
-								<img className="chart-img" src="/assets/img/bar-chart.png" alt="" />
-							</div>
-						</Col>
-					</Row>
-				</div> */}
+				
 				<div className="general-table">
 					<Table striped condensed hover>
 						<thead>
@@ -189,8 +201,36 @@ class Pools extends Component {
 									</tr>
 								)
 							}
+							{ 
+								 isShowAdd?
+								 <tr>
+									<td>
+										<FormControl type="text" placeholder="Account Name" inputRef={(ref) => this.addAccountName = ref}/>
+									</td>
+									<td>
+										<FormControl type="text" placeholder="Currency" inputRef={(ref) => this.addCurrency = ref}/>
+									</td>
+									<td>
+										<FormControl type="text" placeholder="AddStratumUrl" inputRef={(ref) => this.addStratumUrl = ref}/>
+									</td>
+									<td>
+										<FormControl type="text" placeholder="User Name" inputRef={(ref) => this.addUsername = ref}/>
+									</td>
+									<td>
+										<FormControl type="text" placeholder="Password" inputRef={(ref) => this.addPassword = ref}/>
+									</td>
+									<td>
+										<Button className="green-btn" onClick={() => {this.add()}}>Add</Button>
+										<Button className="red-btn" onClick={() => {this.addServerShow(false)}}>Cancel</Button>
+									</td>
+								</tr> : ''
+							
+							}
 						</tbody>
 					</Table>
+
+					<Button className="green-btn" onClick={() => {this.addServerShow(true)}}>Add Server</Button>
+
 					<div className="pagination-box">
 						<Button className="btn-pagination">Showing 1 to 3 of 3 entries</Button>
 						<nav className="page-box" aria-label="Page navigation example">

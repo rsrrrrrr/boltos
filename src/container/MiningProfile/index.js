@@ -93,6 +93,10 @@ deleteProfile = (mc_id) => {
 		})
 }
 
+addPool = () =>{
+	this.props.history.push('/home/add');
+}
+
 	render() {
 		// const { profile } = this.state
 
@@ -117,18 +121,6 @@ deleteProfile = (mc_id) => {
 							</tr>
 						</thead>
 						<tbody>
-							{/* {
-								profile.map((index, i) => {
-									return (
-										<tr key={i}>
-											<td>{item.name}</td>
-											<td>{item.type}</td>
-											<td>{item.mining}</td>
-											<td>{item.switch}</td>
-										</tr>
-									)
-								})
-							} */}
 							{
 							data.map((item, i) =>
 									<tr key={i}>
@@ -150,34 +142,10 @@ deleteProfile = (mc_id) => {
 
 						}
 
-							{/* <tr>
-								<td>MultiManero</td>
-								<td>Multi Pool</td>
-								<td>
-									<ul>
-										<li>Manero-Pool1</li>
-										<li>ZCash-Pool1 </li>
-										<li>Dash-Pool1</li>
-									</ul>
-								</td>
-								<td>60min</td>
-							</tr>
-							<tr>
-								<td>MultiManero</td>
-								<td>Multi Pool</td>
-								<td>
-									<ul>
-										<li>Manero-Pool1</li>
-										<li>ZCash-Pool1 </li>
-										<li>Dash-Pool1</li>
-									</ul>
-								</td>
-								<td>60min</td>
-							</tr>
-							 */}
+						
 						</tbody>
 					</Table>
-					<Button className="green-btn">Add Pool</Button>
+					<Button className="green-btn" onClick={()=>this.addPool()}>Add Pool</Button>
 					<div className="pagination-box">
 						<Button className="btn-pagination">Showing 2 to 2 of 2 entries</Button>
 						<nav className="page-box" aria-label="Page navigation example">

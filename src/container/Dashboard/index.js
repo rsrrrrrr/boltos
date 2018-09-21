@@ -16,6 +16,7 @@ import {
 } from 'react-bootstrap'
 import axios from 'axios'
 import query from '../../common/Query';
+import Config from '../../common/Config';
 
 
 const products = [];
@@ -152,7 +153,7 @@ class Dashboard extends Component {
 			miner_name: this.minerName.value,
 			target_temp: this.targetTemp.value,
 			mining_config: this.state.value,
-			min_fanspeed: 2
+			min_fanspeed: this.fanspeed.value
 		}
 		// console.log(this.select)
 		// axios.post('https://dev.boltos.io:3000/api/v1/users/server-update', reqData, { headers: headers })
@@ -231,7 +232,7 @@ class Dashboard extends Component {
 		axios.get('http://localhost:3000/api/v1/users/mining-config', { headers: headers })
 			.then(res => {
 				// console.log('iddd', id)
-				// console.log('mining server =>', res)
+				console.log('mining server =>', res)
 				this.setState({ mining: res.data.data })
 			})
 	}
@@ -270,7 +271,6 @@ class Dashboard extends Component {
 
 	getData = () => {
 		var token = localStorage.getItem('token')
-		// console.log('token dashboard', token)
 		// axios.get('https://dev.boltos.io:3000/api/v1/users/dashboard', {
 		axios.get('http://localhost:3000/api/v1/users/dashboard', {
 			headers: {
@@ -558,3 +558,4 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(Dashboard)
+

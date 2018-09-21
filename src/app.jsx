@@ -21,6 +21,7 @@ import Profile from './container/Profile'
 import NotMatch from './container/404'
 import Download from './container/Download'
 import Verify from './container/Verify'
+import Add from './container/Add';
 
 
 
@@ -66,6 +67,7 @@ function App() {
 						<Route path="/home/miningprofile" render={props => <MiningProfile {...props} />} />
 						<Route path="/home/edit/:miningprifile_id" render={props => <Edit {...props} />} />
 						<Route path="/home/profile" render={props => <Profile {...props} />} />
+						<Route path="/home/add" render={props => <Add {...props} />} />
 					</Home>
 				)} />
 				<Route exact path="*" render={props => <NotMatch {...props} />} />

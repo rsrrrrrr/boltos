@@ -76,7 +76,7 @@ class List extends React.Component {
 	  }
   }
 
-class Edit extends Component {
+class Add extends Component {
 	constructor(props, context) {
 		super(props, context);
 
@@ -101,10 +101,8 @@ class Edit extends Component {
 		this.getData();
 	}
 
-	update = () => {
+	addProfile = () => {
 		var token = localStorage.getItem('token')
-		// console.log('token delete', token)
-		// var id = localStorage.getItem('id')
 		var headers = {
 			'Authorization': 'Bearer ' + token
 		}
@@ -126,17 +124,11 @@ class Edit extends Component {
 			mc_pools: mc_pools,
 			mc_switching: this.profileInterval.value
 		}
-
-		// console.log(reqData);
-		// console.log(this.select)
 		// axios.post('https://dev.boltos.io:3000/api/v1/users/mining-profiles', reqData, { headers: headers })
-		axios.post('http://localhost:3000/api/v1/users/mining-profiles', reqData, { headers: headers })
+		axios.post('http://localhost:3000/api/v1/users/mining-profile-create', reqData, { headers: headers })
 			.then(res => {
-				// console.log('res update =>', res)
-				// this.getData();
-				// console.log('token secoond', token)
-				// localStorage.setItem('id', '')
-				this.getData();
+			
+				this.props.history.push('/home/miningprofile');
 			})
 		
 	}
@@ -144,47 +136,47 @@ class Edit extends Component {
 // API call 
 getData = () => {
 	var token = localStorage.getItem('token')
-	// axios.get('https://dev.boltos.io:3000/api/v1/users/mining-profiles/', {
-	axios.get('http://localhost:3000/api/v1/users/mining-profiles/', {
-		headers: {
-			'Authorization': 'Bearer ' + token,
-		}
-	}).then(res => {
-		if (res.status == 200) {
-			res.data.data.map(item => {
-				// console.log(item);
-				if(item.mc_id == this.state.minigprofile_id) {
-					this.setState({data : item});
+// 	// axios.get('https://dev.boltos.io:3000/api/v1/users/mining-profiles/', {
+// 	axios.get('http://localhost:3000/api/v1/users/mining-profiles/', {
+// 		headers: {
+// 			'Authorization': 'Bearer ' + token,
+// 		}
+// 	}).then(res => {
+// 		if (res.status == 200) {
+// 			res.data.data.map(item => {
+// 				// console.log(item);
+// 				if(item.mc_id == this.state.minigprofile_id) {
+// 					this.setState({data : item});
 					
-					var poolIDs = item.pools.split('] [');
-					var pools = [];
-					poolIDs.map(id => {
-						id = id.replace(']', '');
-						id = id.replace('[', '');
+// 					var poolIDs = item.pools.split('] [');
+// 					var pools = [];
+// 					poolIDs.map(id => {
+// 						id = id.replace(']', '');
+// 						id = id.replace('[', '');
 
-						var postData = {
-							mp_id: id
-						};
-						axios.post('http://localhost:3000/api/v1/users/get-mining-pool/', postData,{headers:{'Authorization': 'Bearer ' + token}})
-						.then(res => {
-							if(res.status == 200) {
-								// console.log(res.data.data);
-								pools.push(res.data.data);
-								this.setState({pools: pools});
-								// console.log(this.state);
-								this.setState({pools: pools});
-							}
-						});
-					});
+// 						var postData = {
+// 							mp_id: id
+// 						};
+// 						axios.post('http://localhost:3000/api/v1/users/get-mining-pool/', postData,{headers:{'Authorization': 'Bearer ' + token}})
+// 						.then(res => {
+// 							if(res.status == 200) {
+// 								// console.log(res.data.data);
+// 								pools.push(res.data.data);
+// 								this.setState({pools: pools});
+// 								// console.log(this.state);
+// 								this.setState({pools: pools});
+// 							}
+// 						});
+// 					});
 					
-				}
-			});
+// 				}
+// 			});
 
-		} 
-		else {
-			this.props.history.push('/home/dashboard');
-		}
-	})
+// 		} 
+// 		else {
+// 			this.props.history.push('/home/dashboard');
+// 		}
+// 	})
 
 	axios.get('http://localhost:3000/api/v1/users/mining-pools', {
 			headers: {
@@ -245,26 +237,27 @@ addSelectedPool = () => {
 	})
 }
 
-deleteProfile = () => {
+cancel = () => {
 	var r = confirm("Do you want to delete this profile?");
 	if(!r) {
 		return;
 	}
 
-	var token = localStorage.getItem('token');
-	var postData = {
-		mc_id : this.state.data.mc_id
-	};
-	axios.post('http://localhost:3000/api/v1/users/delete-mining-profile',postData, {
-			headers: {
-				'Authorization': 'Bearer ' + token,
-			}
-		})
-		.then(res => {
-			// console.log(res);
-			this.props.history.push('/home/miningprofile');
+	// var token = localStorage.getItem('token');
+	// var postData = {
+	// 	mc_id : this.state.data.mc_id
+	// };
+	// axios.post('http://localhost:3000/api/v1/users/delete-mining-profile',postData, {
+	// 		headers: {
+	// 			'Authorization': 'Bearer ' + token,
+	// 		}
+	// 	})
+	// 	.then(res => {
+	// 		// console.log(res);
+	// 		this.props.history.push('/home/miningprofile');
 			
-		})
+    // 	})
+    this.props.history.push('/home/miningprofile');
 }
 
 selectChange = (event) => {
@@ -287,7 +280,7 @@ selectChangeInterval = (event) => {
 				<div className="edit">
 					<FormGroup>
 						<ControlLabel>Profile Name</ControlLabel>
-						<FormControl type="text" placeholder="Profile Name" defaultValue={data.profile}  inputRef={(ref) => this.profileName = ref} />
+						<FormControl type="text" placeholder="Profile Name" inputRef={(ref) => this.profileName = ref} />
 					</FormGroup>
 
 					<FormGroup controlId="formControlsSelect" className="filter-select">
@@ -295,7 +288,7 @@ selectChangeInterval = (event) => {
 						{
 							console.log(data.type)
 						}
-						<FormControl componentClass="select" defaultValue={data.type} value={data.type}  onChange={this.selectChange} inputRef={(ref) => this.profileType = ref}>
+						<FormControl componentClass="select" onChange={this.selectChange} inputRef={(ref) => this.profileType = ref}>
 							<option value="1">SinglePool</option>
 							<option value="2">MultiPool</option>
 							<option value="3">Profitability Pool</option>
@@ -305,26 +298,6 @@ selectChangeInterval = (event) => {
 
 					<div className="general-table">
 						<p className="title-page">Pools</p>
-						{/* <Table striped condensed hover>
-							<tbody>
-								<tr>
-									<td>Manero-Pool1</td>
-									<td className="table-btn"><Button>Drag Up/Down<img className="move-img" src="/assets/img/move.png" alt="" /></Button></td>
-									<td><Button className="red-btn">Delete</Button></td>
-								</tr>
-								<tr>
-									<td>Manero-Pool1</td>
-									<td className="table-btn"><Button>Drag Up/Down<img className="move-img" src="/assets/img/move.png" alt="" /></Button></td>
-									<td><Button className="red-btn">Delete</Button></td>
-								</tr>
-								<tr>
-									<td>Manero-Pool1</td>
-									<td className="table-btn"><Button>Drag Up/Down<img className="move-img" src="/assets/img/move.png" alt="" /></Button></td>
-									<td><Button className="red-btn">Delete</Button></td>
-								</tr>
-							</tbody>
-						</Table> */}
-
 						<div>
         					<List colors={pools} refresh={this.refreshColorList} onClick={this.deletePool}/>	
 						</div>
@@ -346,7 +319,7 @@ selectChangeInterval = (event) => {
 					</div>
 					<FormGroup controlId="formControlsSelect" className="filter-select">
 						<ControlLabel>Switching Interval</ControlLabel>
-						<FormControl componentClass="select" placeholder="select" value={data.switchingIntervals} defaultValue={data.switchingIntervals} onChange={this.selectChangeInterval} inputRef={(ref) => this.profileInterval = ref}>
+						<FormControl componentClass="select" placeholder="select" onChange={this.selectChangeInterval} inputRef={(ref) => this.profileInterval = ref}>
 							<option value="1">1 Hour</option>
 							<option value="2">2 Hours</option>
 							<option value="4">4 Hours</option>
@@ -357,8 +330,8 @@ selectChangeInterval = (event) => {
 						</FormControl>
 					</FormGroup>
 					<div className="btn-bottom">
-						<Button className="green-btn" onClick={() => {this.update()}}>Update Profile Info</Button>
-						<Button className="red-btn" onClick={() => {this.deleteProfile()}}>Delete Profile</Button>
+						<Button className="green-btn" onClick={() => {this.addProfile()}}>Add Profile Info</Button>
+						<Button className="red-btn" onClick={() => {this.cancel()}}>Cancel</Button>
 					</div>
 				</div>
 
@@ -400,4 +373,4 @@ const mapStateToProps = state => ({
 	session: state.session
 });
 
-export default connect(mapStateToProps)(Edit)
+export default connect(mapStateToProps)(Add)
