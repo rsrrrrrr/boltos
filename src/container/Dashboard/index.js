@@ -42,6 +42,10 @@ class Dashboard extends Component {
 			mining: [],
 			value: ''
 		};
+
+		this.coremhz = [];
+		this.memorymhz = [];
+		this.plimit = [];
 	}
 
 	componentWillMount() {
@@ -143,17 +147,30 @@ class Dashboard extends Component {
 	}
 	update = () => {
 		var token = localStorage.getItem('token')
-		// console.log('token delete', token)
 		var id = localStorage.getItem('id')
 		var headers = {
 			'Authorization': 'Bearer ' + token
 		}
+
+		var gpuData = [];
+		this.state.server.gpus.map((gpu, i) => {
+			gpuData.push({
+				gpu_id : gpu.gpu_id,
+				gpu_coremhz: this.coremhz[i].value,
+				gpu_memorymhz: this.memorymhz[i].value,
+				gpu_plimit: this.plimit[i].value
+			});
+		});
+
+		console.log(gpuData);
+
 		const reqData = {
 			mserver_id: id,
 			miner_name: this.minerName.value,
 			target_temp: this.targetTemp.value,
 			mining_config: this.state.value,
-			min_fanspeed: this.fanspeed.value
+			min_fanspeed: this.fanspeed.value,
+			gpus: gpuData
 		}
 		// console.log(this.select)
 		// axios.post('https://dev.boltos.io:3000/api/v1/users/server-update', reqData, { headers: headers })
@@ -183,9 +200,6 @@ class Dashboard extends Component {
 		// axios.post('https://dev.boltos.io:3000/api/v1/users/server-delete', reqData, { headers: headers })
 		axios.post('http://localhost:3000/api/v1/users/server-delete', reqData, { headers: headers })
 			.then(res => {
-				// console.log('idddd', id)
-				// console.log('req =>', reqData)
-				// console.log('res delete =>', res)
 				alert('row deleted');
 				this.getData();
 				// if (res.status == 200) {
@@ -205,7 +219,6 @@ class Dashboard extends Component {
 
 	deleteModal = () =>{
 		this.delete(localStorage.getItem('id'))
-		// console.log(localStorage.getItem('id'))
 		this.setState({lgShow: false})
 		this.getData()
 	}
@@ -526,7 +539,16 @@ class Dashboard extends Component {
 												</tr>
 											</thead>
 											<tbody>
-												<tr>
+												{
+													server.gpus.map((item, i) =>
+														<tr>
+															<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={item.gpu_coremhz}  inputRef={(ref) => this.coremhz[i] = ref}/></td>
+															<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={item.gpu_memorymhz}  inputRef={(ref) => this.memorymhz[i] = ref}/></td>
+															<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={item.gpu_plimit}  inputRef={(ref) => this.plimit[i] = ref}/></td>		
+														</tr>
+													)
+												}
+												{/* <tr>
 													<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={defaultValues.core_mhz} /></td>
 													<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={defaultValues.memory_mhz} /></td>
 													<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={defaultValues.power_limit}/></td>
@@ -535,7 +557,7 @@ class Dashboard extends Component {
 													<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={defaultValues.core_mhz} /></td>
 													<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={defaultValues.memory_mhz} /></td>
 													<td className="modal-td"><FormControl className="table-input" type="number" defaultValue={defaultValues.power_limit} /></td>
-												</tr>
+												</tr> */}
 											</tbody>
 										</Table>
 									</div>

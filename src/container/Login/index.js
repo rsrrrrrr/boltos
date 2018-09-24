@@ -49,7 +49,8 @@ class Login extends Component {
             username: this.username.value,
             password: this.password.value
         }
-        axios.post('https://dev.boltos.io:3000/api/v1/users/login', reqData).then(response => {
+        // axios.post('https://dev.boltos.io:3000/api/v1/users/login', reqData).then(response => {
+        axios.post('http://localhost:3000/api/v1/users/login', reqData).then(response => {
             if (response && response.data) {
                 //check if logged in
                 // console.log(response.data);

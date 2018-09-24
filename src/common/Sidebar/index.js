@@ -20,12 +20,12 @@ export default class Sidebar extends React.Component {
 							<p className="side-title">User Profile</p>
 						</Link>
 					</li>
-					<li>
+					{/* <li>
 						<div className="data-txt">
 							<p className="side-title">Data</p>
 							<img className="plus" src="/assets/img/plus.png" alt="" />
 						</div>
-					</li>
+					</li> */}
 					<li className="side-li">
 						<Link to="/home/pools">
 							<div className="logo-pools" />
