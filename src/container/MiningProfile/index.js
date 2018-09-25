@@ -145,7 +145,7 @@ addPool = () =>{
 						
 						</tbody>
 					</Table>
-					<Button className="green-btn" onClick={()=>this.addPool()}>Add Pool</Button>
+					<Button className="green-btn" onClick={()=>this.addPool()}>Add Profile</Button>
 					<div className="pagination-box">
 						<Button className="btn-pagination">Showing 2 to 2 of 2 entries</Button>
 						<nav className="page-box" aria-label="Page navigation example">

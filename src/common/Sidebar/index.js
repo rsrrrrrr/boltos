@@ -35,7 +35,7 @@ export default class Sidebar extends React.Component {
 					<li className="side-li">
 						<Link to="/home/miningprofile">
 							<div className="logo-mining" />
-							<p className="side-title">Mining Profile</p>
+							<p className="side-title">Mining Profiles</p>
 						</Link>
 					</li>
 					{/* <li className="side-li">

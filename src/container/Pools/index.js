@@ -229,7 +229,7 @@ class Pools extends Component {
 						</tbody>
 					</Table>
 
-					<Button className="green-btn" onClick={() => {this.addServerShow(true)}}>Add Server</Button>
+					<Button className="green-btn" onClick={() => {this.addServerShow(true)}}>Add Pool</Button>
 
 					<div className="pagination-box">
 						<Button className="btn-pagination">Showing 1 to 3 of 3 entries</Button>
